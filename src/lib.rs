@@ -1,6 +1,1 @@
-pub mod beerus_core {
-    pub use beerus_core::{
-        config::Config,
-        lightclient::beerus::{Beerus, BeerusLightClient},
-    };
-}
+//! Rust implementation of two dimensional Reed-Solomon merkle tree data availability scheme.

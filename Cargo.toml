@@ -1,20 +1,13 @@
 [package]
-name = "beerus"
-version = "0.1.0"
+name = "rsmt2d-rs"
+version = "0.0.1"
 edition = "2021"
-
-[workspace]
-members = ["beerus_core", "beerus_cli", "beerus_rest_api"]
-
-[workspace.package]
-edition = "2021"
-authors = ["Abdelhamid Bakhta <@abdelhamidbakhta>", "Lucas Levy <@lucaslvy>"]
-description = "A fast, secure and portable light client for StarkNet"
-homepage = "https://github.com/starknet-exploration/beerus"
-repository = "https://github.com/starknet-exploration/beerus"
+authors = ["Abdelhamid Bakhta <@abdelhamidbakhta>"]
+description = "Rust implementation of two dimensional Reed-Solomon merkle tree data availability scheme."
+homepage = "https://github.com/stark-rocket/rsmt2d-rs"
+repository = "https://github.com/stark-rocket/rsmt2d-rs"
 readme = "./README.md"
 license = "MIT"
 
 
 [dependencies]
-beerus_core = { path = "./beerus_core" }
