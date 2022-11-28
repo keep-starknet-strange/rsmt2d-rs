@@ -6,7 +6,7 @@ fn main() -> Result<()> {
     let rsmt2d = rsmt2d::new(merkle_tree);
 
     // Instantiate original data.
-    let data: Matrix2D = &vec![vec![0, 1, 2, 3], vec![4, 5, 6, 7], vec![8, 9, 10, 11]];
+    let data: Matrix2D = vec![vec![0, 1, 2, 3], vec![4, 5, 6, 7], vec![8, 9, 10, 11]];
 
     // Instantiate codec based on original data length.
     let codec = codec::new(data.len())?;
@@ -15,7 +15,7 @@ fn main() -> Result<()> {
     let _extended_data_square = rsmt2d.compute_extended_data_square(data, codec.as_ref())?;
 
     // TODO: remove some data
-    let partial_data = &vec![vec![0, 0, 0, 0]];
+    let partial_data = Matrix2D::default();
 
     // Import partial data.
     let extended_data_square = rsmt2d.import_extended_data_square(partial_data, codec.as_ref())?;
