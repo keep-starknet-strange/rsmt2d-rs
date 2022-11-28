@@ -61,4 +61,27 @@ mod tests {
             .to_string()
             .contains("Number of chunks must be a square number."));
     }
+
+    #[test]
+    fn erasure_extend_square_works() -> Result<()> {
+        let merkle_tree = merkle_tree::new();
+        let data: Matrix2D = vec![
+            vec![0, 1, 2, 3],
+            vec![4, 5, 6, 7],
+            vec![8, 9, 10, 11],
+            vec![12, 13, 14, 15],
+        ];
+        let mut data_square = DataSquare::new(data, merkle_tree.as_ref()).unwrap();
+        data_square.erasure_extend_square()?;
+        assert!(
+            data_square.square_row
+                == vec![
+                    [[0, 1, 2, 3], [4, 5, 6, 7], [0, 0, 0, 0], [0, 0, 0, 0]],
+                    [[8, 9, 10, 11], [12, 13, 14, 15], [0, 0, 0, 0], [0, 0, 0, 0]],
+                    [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+                    [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+                ]
+        );
+        Ok(())
+    }
 }
