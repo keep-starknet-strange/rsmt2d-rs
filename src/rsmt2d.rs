@@ -1,15 +1,28 @@
 use eyre::Result;
 
-use crate::{codec::Codec, data_square::DataSquare, merkle_tree::MerkleTree, Matrix2D};
+use crate::{
+    codec::Codec,
+    data_square::{ExtendedDataSquare},
+    merkle_tree::MerkleTree,
+    Matrix2D,
+};
 
 /// Reed Solomon Merkle Tree 2D
 pub trait ReedSolomonMerkleTree2D {
     /// Compute the extended data square for some chunks of data.
-    fn compute_extended_data_square(&self, data: Matrix2D, codec: &dyn Codec) -> Result<Matrix2D>;
+    fn compute_extended_data_square(
+        &self,
+        data: Matrix2D,
+        codec: &dyn Codec,
+    ) -> Result<ExtendedDataSquare>;
     /// Import an extended data square, represented as flattened chunks of data.
-    fn import_extended_data_square(&self, data: Matrix2D, codec: &dyn Codec) -> Result<Matrix2D>;
+    fn import_extended_data_square(
+        &self,
+        data: Matrix2D,
+        codec: &dyn Codec,
+    ) -> Result<ExtendedDataSquare>;
     /// Attempt to repair an incomplete extended data square.
-    fn repair(&self, data: DataSquare) -> Result<()>;
+    fn repair(&self, data: ExtendedDataSquare) -> Result<()>;
 }
 
 pub fn new(merkle_tree: Box<dyn MerkleTree>) -> Box<dyn ReedSolomonMerkleTree2D> {
@@ -33,15 +46,19 @@ impl ReedSolomonMerkleTree2D for ReedSolomonMerkleTree2DImpl {
         &self,
         _data: Matrix2D,
         _codec: &dyn Codec,
-    ) -> Result<Matrix2D> {
+    ) -> Result<ExtendedDataSquare> {
         todo!()
     }
 
-    fn import_extended_data_square(&self, _data: Matrix2D, _codec: &dyn Codec) -> Result<Matrix2D> {
+    fn import_extended_data_square(
+        &self,
+        _data: Matrix2D,
+        _codec: &dyn Codec,
+    ) -> Result<ExtendedDataSquare> {
         todo!()
     }
 
-    fn repair(&self, _data: DataSquare) -> Result<()> {
+    fn repair(&self, _data: ExtendedDataSquare) -> Result<()> {
         todo!()
     }
 }

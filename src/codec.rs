@@ -1,5 +1,5 @@
 use eyre::Result;
-use reed_solomon_erasure::{galois_8::ReedSolomon};
+use reed_solomon_erasure::galois_8::ReedSolomon;
 
 use crate::data_square::DataSquare;
 
