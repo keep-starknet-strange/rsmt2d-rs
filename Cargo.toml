@@ -11,3 +11,5 @@ license = "MIT"
 
 
 [dependencies]
+eyre = "0.6.8"
+reed-solomon-erasure = "6.0.0"
