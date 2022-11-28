@@ -77,9 +77,18 @@ impl DataSquare {
         })
     }
 
-    /// TODO: Comment function
+    /// Extend original square horizontally and vertically
+    ///  ------- -------
+    /// |       |       |
+    /// |   O → |   E   |
+    /// |   ↓   |       |
+    ///  ------- -------
+    /// |       |
+    /// |   E   |
+    /// |       |
+    ///  -------
     pub fn erasure_extend_square(&mut self) -> Result<()> {
-        self.width = 2 * self.width;
+        self.width *= 2;
         let filler_chunk = vec![Default::default(); self.chunk_size];
         let mut filler_row: Vec<Vec<u8>> = vec![];
         for _ in 0..self.width {
@@ -96,23 +105,14 @@ impl DataSquare {
             self.square_row.insert(i, filler_row.clone());
         }
         // Extend cols.
-        // let mut new_col: Matrix3D = vec![vec![Default::default(); self.width]; self.width];
-        // for i in 0..self.width {
-        //     for j in 0..self.width {
-        //         new_col[i][j].push(self.square_row[j][i]);
-        //     }
-        // }
+        let mut square_col: Matrix3D = vec![vec![]; self.width];
+        for j in 0..self.width {
+            for i in 0..self.width {
+                square_col[j].push(self.square_row[i][j].to_vec());
+            }
+        }
 
-        // Extend original square horizontally and vertically
-        //  ------- -------
-        // |       |       |
-        // |   O → |   E   |
-        // |   ↓   |       |
-        //  ------- -------
-        // |       |
-        // |   E   |
-        // |       |
-        //  -------
+        self.square_col = square_col;
         Ok(())
     }
 }
