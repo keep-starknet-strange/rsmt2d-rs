@@ -106,9 +106,9 @@ impl DataSquare {
         }
         // Extend cols.
         let mut square_col: Matrix3D = vec![vec![]; self.width];
-        for j in 0..self.width {
+        for (j, col) in square_col.iter_mut().enumerate().take(self.width) {
             for i in 0..self.width {
-                square_col[j].push(self.square_row[i][j].to_vec());
+                col.push(self.square_row[i][j].to_vec());
             }
         }
 
