@@ -1,16 +1,16 @@
 use eyre::Result;
 use reed_solomon_erasure::galois_8::ReedSolomon;
 
-use crate::data_square::DataSquare;
+use crate::{data_square::DataSquare, Matrix2D, Matrix3D};
 
 /// Codec handle for encoding and decoding data
 pub trait Codec {
     /// Encode encodes original data, automatically extracting share size.
     /// There must be no missing shares. Only returns parity shares.
-    fn encode(&self, data: DataSquare) -> Result<DataSquare>;
+    fn encode(&self, data: Matrix2D) -> Result<Matrix2D>;
     /// Decode sparse original + parity data, automatically extracting share size.
     /// Missing shares must be nil. Returns original shares only.
-    fn decode(&self, data: DataSquare) -> Result<DataSquare>;
+    fn decode(&self, data: Matrix3D) -> Result<Matrix3D>;
     /// Return the max. number of chunks each code supports in a 2D square.
     fn max_chunks(&self) -> usize;
 }
@@ -40,13 +40,13 @@ impl ReedSolomonCodec {
 impl Codec for ReedSolomonCodec {
     /// Encode encodes original data, automatically extracting share size.
     /// There must be no missing shares. Only returns parity shares.
-    fn encode(&self, _data: DataSquare) -> Result<DataSquare> {
+    fn encode(&self, _data: Matrix2D) -> Result<Matrix2D> {
         todo!()
     }
 
     /// Decode sparse original + parity data, automatically extracting share size.
     /// Missing shares must be nil. Returns original shares only.
-    fn decode(&self, _data: DataSquare) -> Result<DataSquare> {
+    fn decode(&self, _data: Matrix3D) -> Result<Matrix3D> {
         todo!()
     }
 

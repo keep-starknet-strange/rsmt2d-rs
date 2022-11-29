@@ -1,11 +1,14 @@
-use std::vec;
+use std::{fmt::Debug, vec};
 
-use crate::{merkle_tree::MerkleTree, Matrix2D, Matrix3D};
+use crate::{
+    codec::{self, Codec},
+    merkle_tree::MerkleTree,
+    Matrix2D, Matrix3D,
+};
 use eyre::{eyre, Result};
 
 /// Store all data for an original data square (ODS) or extended data square (EDS).
 /// Data is duplicated in both row-major and column-major order in order to be able to provide zero-allocation column slices.
-#[derive(Debug)]
 pub struct DataSquare {
     pub square_row: Matrix3D,
     pub square_col: Matrix3D,
@@ -14,6 +17,7 @@ pub struct DataSquare {
     pub chunk_size: usize,
     pub row_roots: Matrix2D,
     pub col_roots: Matrix2D,
+    pub codec: Box<dyn Codec>,
 }
 
 impl DataSquare {
@@ -30,7 +34,7 @@ impl DataSquare {
     ///
     /// * `DataSquare` - Data square.
     /// * `Result` - Error.
-    pub fn new(original_data: Matrix2D, _merkle_tree: &dyn MerkleTree) -> Result<Self> {
+    pub fn new(original_data: Matrix2D) -> Result<Self> {
         // Check that data is not empty.
         if original_data.is_empty() {
             return Err(eyre!("Data must not be empty."));
@@ -66,6 +70,8 @@ impl DataSquare {
             }
         }
 
+        let codec = codec::new(original_data.len())?;
+
         Ok(Self {
             square_row,
             square_col,
@@ -74,6 +80,7 @@ impl DataSquare {
             chunk_size,
             row_roots: vec![],
             col_roots: vec![],
+            codec,
         })
     }
 
@@ -105,14 +112,41 @@ impl DataSquare {
             self.square_row.insert(i, filler_row.clone());
         }
         // Extend cols.
-        let mut square_col: Matrix3D = vec![vec![]; self.width];
-        for (j, col) in square_col.iter_mut().enumerate().take(self.width) {
+        self.square_col = vec![vec![]; self.width];
+        for (j, col) in self.square_col.iter_mut().enumerate().take(self.width) {
             for i in 0..self.width {
                 col.push(self.square_row[i][j].to_vec());
             }
         }
+        for i in self.original_width..self.width {
+            self.erasure_extend_row(i)?;
+        }
+        Ok(())
+    }
 
-        self.square_col = square_col;
+    /// Encode a given row.
+    ///
+    /// # Arguments
+    ///
+    /// * `i` - The row index.
+    ///
+    /// # Returns
+    ///
+    /// * `()` - Unit.
+    /// * `Result` - Error.
+    fn erasure_extend_row(&mut self, i: usize) -> Result<()> {
+        // Create a new codec.
+        // TODO: implement cache for codec.
+        let codec = codec::new(self.square_row.len())?;
+        // Apply Reed-Solomon encoding.
+        let shares = codec.encode(self.square_row[i][0..self.original_width].to_vec())?;
+        let length = shares.len() - self.original_width;
+        let new_row = shares[length..].to_vec();
+        // Save encoded row in square row.
+        for j in 0..length {
+            self.square_row[i][self.original_width + j] = new_row[j].clone();
+            self.square_col[self.original_width + j][i] = new_row[j].clone();
+        }
         Ok(())
     }
 }
