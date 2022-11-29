@@ -1,4 +1,4 @@
-use std::{fmt::Debug, vec};
+use std::{vec};
 
 use crate::{
     codec::{self, Codec},
@@ -95,6 +95,25 @@ impl DataSquare {
     /// |       |
     ///  -------
     pub fn erasure_extend_square(&mut self) -> Result<()> {
+        self.original_width = self.width;
+        // Extend data square.
+        self.extend_square()?;
+
+        for i in 0..self.original_width {
+            // Extend horizontally with Reed Solomon encoding.
+            self.erasure_extend_row(i)?;
+            // Extend vertically with Reed Solomon encoding.
+            self.erasure_extend_col(i)?;
+        }
+
+        Ok(())
+    }
+
+    /// Extend original square horizontally and vertically
+    ///
+    /// # Returns
+    /// * `Result` - Error.
+    fn extend_square(&mut self) -> Result<()> {
         self.width *= 2;
         let filler_chunk = vec![Default::default(); self.chunk_size];
         let mut filler_row: Vec<Vec<u8>> = vec![];
@@ -118,9 +137,7 @@ impl DataSquare {
                 col.push(self.square_row[i][j].to_vec());
             }
         }
-        for i in self.original_width..self.width {
-            self.erasure_extend_row(i)?;
-        }
+
         Ok(())
     }
 
@@ -128,24 +145,53 @@ impl DataSquare {
     ///
     /// # Arguments
     ///
-    /// * `i` - The row index.
+    /// * `row_index` - The row index.
     ///
     /// # Returns
     ///
     /// * `()` - Unit.
     /// * `Result` - Error.
-    fn erasure_extend_row(&mut self, i: usize) -> Result<()> {
+    fn erasure_extend_row(&mut self, row_index: usize) -> Result<()> {
         // Create a new codec.
         // TODO: implement cache for codec.
-        let codec = codec::new(self.square_row.len())?;
+        let codec = codec::new(self.original_width)?;
         // Apply Reed-Solomon encoding.
-        let shares = codec.encode(self.square_row[i][0..self.original_width].to_vec())?;
-        let length = shares.len() - self.original_width;
-        let new_row = shares[length..].to_vec();
+        let shares = self.square_row[row_index][0..self.original_width]
+            .to_vec()
+            ;
+        let encoded_shares = codec.encode(shares)?;
         // Save encoded row in square row.
-        for j in 0..length {
-            self.square_row[i][self.original_width + j] = new_row[j].clone();
-            self.square_col[self.original_width + j][i] = new_row[j].clone();
+        for i in 0..encoded_shares.len() {
+            self.square_row[row_index][self.original_width + i] = encoded_shares[i].clone();
+            self.square_col[self.original_width + i][row_index] = encoded_shares[i].clone();
+        }
+        Ok(())
+    }
+
+    /// Encode a given col.
+    ///
+    /// # Arguments
+    ///
+    /// * `i` - The col index.
+    ///
+    /// # Returns
+    ///
+    /// * `()` - Unit.
+    /// * `Result` - Error.
+    fn erasure_extend_col(&mut self, col_index: usize) -> Result<()> {
+        // Create a new codec.
+        // TODO: implement cache for codec.
+        let codec = codec::new(self.original_width)?;
+        // Apply Reed-Solomon encoding.
+        let shares = self.square_col[col_index][0..self.original_width]
+            .to_vec()
+            ;
+
+        let encoded_shares = codec.encode(shares)?;
+        // Save encoded row in square row.
+        for i in 0..encoded_shares.len() {
+            self.square_row[self.original_width + i][col_index] = encoded_shares[i].clone();
+            self.square_col[col_index][self.original_width + i] = encoded_shares[i].clone();
         }
         Ok(())
     }
