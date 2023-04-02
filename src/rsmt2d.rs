@@ -1,11 +1,6 @@
 use eyre::Result;
 
-use crate::{
-    codec::Codec,
-    data_square::{ExtendedDataSquare},
-    merkle_tree::MerkleTree,
-    Matrix2D,
-};
+use crate::{codec::Codec, data_square::ExtendedDataSquare, merkle_tree::MerkleTree, Matrix2D};
 
 /// Reed Solomon Merkle Tree 2D
 pub trait ReedSolomonMerkleTree2D {

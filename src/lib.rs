@@ -8,8 +8,8 @@ pub mod data_square;
 pub mod merkle_tree;
 pub mod rsmt2d;
 
-pub type Matrix2D<'a> = &'a Vec<Vec<u8>>;
-pub type Matrix3D<'a> = &'a Vec<Vec<Vec<u8>>>;
+pub type Matrix2D = Vec<Vec<u8>>;
+pub type Matrix3D = Vec<Vec<Vec<u8>>>;
 
 #[cfg(test)]
 mod tests {
