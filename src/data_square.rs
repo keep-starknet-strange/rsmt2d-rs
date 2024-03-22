@@ -158,9 +158,9 @@ impl DataSquare {
         let shares = self.square_row[row_index][0..self.original_width].to_vec();
         let encoded_shares = codec.encode(shares)?;
         // Save encoded row in square row.
-        for i in 0..encoded_shares.len() {
-            self.square_row[row_index][self.original_width + i] = encoded_shares[i].clone();
-            self.square_col[self.original_width + i][row_index] = encoded_shares[i].clone();
+        for (i, share) in encoded_shares.iter().enumerate() {
+            self.square_row[row_index][self.original_width + i] = share.clone();
+            self.square_col[self.original_width + i][row_index] = share.clone();
         }
         Ok(())
     }
@@ -184,9 +184,9 @@ impl DataSquare {
 
         let encoded_shares = codec.encode(shares)?;
         // Save encoded row in square row.
-        for i in 0..encoded_shares.len() {
-            self.square_row[self.original_width + i][col_index] = encoded_shares[i].clone();
-            self.square_col[col_index][self.original_width + i] = encoded_shares[i].clone();
+        for (i, share) in encoded_shares.iter().enumerate() {
+            self.square_row[self.original_width + i][col_index] = share.clone();
+            self.square_col[col_index][self.original_width + i] = share.clone();
         }
         Ok(())
     }
