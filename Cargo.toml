@@ -1,11 +1,11 @@
 [package]
 name = "rsmt2d-rs"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 authors = ["Abdelhamid Bakhta <@abdelhamidbakhta>"]
 description = "Rust implementation of two dimensional Reed-Solomon merkle tree data availability scheme."
-homepage = "https://github.com/stark-rocket/rsmt2d-rs"
-repository = "https://github.com/stark-rocket/rsmt2d-rs"
+homepage = "https://github.com/keep-starknet-strange/rsmt2d-rs"
+repository = "https://github.com/keep-starknet-strange/rsmt2d-rs"
 readme = "./README.md"
 license = "MIT"
 
