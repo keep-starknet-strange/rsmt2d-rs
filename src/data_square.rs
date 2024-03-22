@@ -1,4 +1,4 @@
-use std::{vec};
+use std::vec;
 
 use crate::{
     codec::{self, Codec},
@@ -156,9 +156,7 @@ impl DataSquare {
         // TODO: implement cache for codec.
         let codec = codec::new(self.original_width)?;
         // Apply Reed-Solomon encoding.
-        let shares = self.square_row[row_index][0..self.original_width]
-            .to_vec()
-            ;
+        let shares = self.square_row[row_index][0..self.original_width].to_vec();
         let encoded_shares = codec.encode(shares)?;
         // Save encoded row in square row.
         for i in 0..encoded_shares.len() {
@@ -183,9 +181,7 @@ impl DataSquare {
         // TODO: implement cache for codec.
         let codec = codec::new(self.original_width)?;
         // Apply Reed-Solomon encoding.
-        let shares = self.square_col[col_index][0..self.original_width]
-            .to_vec()
-            ;
+        let shares = self.square_col[col_index][0..self.original_width].to_vec();
 
         let encoded_shares = codec.encode(shares)?;
         // Save encoded row in square row.
