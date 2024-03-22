@@ -1,6 +1,4 @@
 //! Rust implementation of two dimensional Reed-Solomon merkle tree data availability scheme.
-
-#[macro_use(shards)]
 extern crate reed_solomon_erasure;
 
 pub mod codec;

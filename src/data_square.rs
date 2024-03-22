@@ -2,7 +2,6 @@ use std::vec;
 
 use crate::{
     codec::{self, Codec},
-    merkle_tree::MerkleTree,
     Matrix2D, Matrix3D,
 };
 use eyre::{eyre, Result};

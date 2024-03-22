@@ -25,8 +25,8 @@ pub fn new(merkle_tree: Box<dyn MerkleTree>) -> Box<dyn ReedSolomonMerkleTree2D>
 }
 
 /// Reed Solomon Merkle Tree 2D implementation
-struct ReedSolomonMerkleTree2DImpl {
-    merkle_tree: Box<dyn MerkleTree>,
+pub struct ReedSolomonMerkleTree2DImpl {
+    pub merkle_tree: Box<dyn MerkleTree>,
 }
 
 impl ReedSolomonMerkleTree2DImpl {
